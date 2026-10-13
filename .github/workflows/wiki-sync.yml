@@ -1,0 +1,31 @@
+name: Sync Docs to Wiki
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'wiki/**'
+  workflow_dispatch: # Allows manual trigger from Actions tab
+
+jobs:
+  sync-wiki:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to push to the wiki repository
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Sync docs to Wiki
+        uses: Andrew-Chen-Wang/github-wiki-action@v4
+        with:
+          path: wiki
+          # Andrew-Chen-Wang/github-wiki-action publishes markdown files in this directory to the GitHub Wiki.
+        env:
+          # If default tokens are prevented from pushing to wikis by organization policy,
+          # configure a Personal Access Token with repo scope as WIKI_SYNC_TOKEN in secrets:
+          # GITHUB_TOKEN: ${{ secrets.WIKI_SYNC_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
