@@ -128,7 +128,7 @@ flowchart TD
 - **Why:** Eliminates ambiguous integer error codes and raw uncaught exceptions.
 - **How:**
   - `enum class ErrorCode : uint32_t`:
-    `Success = 0`, `InvalidArgument`, `FileNotFound`, `PathNotFound`, `AlreadyExists`, `PermissionDenied`, `DiskFull`, `DatabaseError`, `MigrationFailed`, `HashMismatch`, `CorruptedObject`, `ObjectNotFound`, `InvalidState`, `IoError`, `NotImplemented`, `InternalError`.
+    `Success = 0`, `InvalidArgument`, `FileNotFound`, `PathNotFound`, `AlreadyExists`, `PermissionDenied`, `DiskFull`, `DatabaseError`, `MigrationFailed`, `HashMismatch`, `CorruptedObject`, `ObjectNotFound`, `InvalidState`, `IOError`, `NotImplemented`, `InternalError`.
   - `class RewindError`:
     - Constructors: `RewindError(ErrorCode code, std::string message, std::string context_path = "")`.
     - Factory method: `static RewindError from_errno(int err_num, std::string_view context_message, std::string_view path = "")` to safely map Linux system call failures (`EACCES`, `ENOENT`, `ENOSPC`, etc.).

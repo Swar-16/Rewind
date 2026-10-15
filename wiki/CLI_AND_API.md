@@ -10,24 +10,24 @@ The Rewind CLI provides a command-line interface for managing protected folders,
 
 ### 1.1 Baseline Global Flags (Implemented in Step 1)
 
-| Flag | Description | Output Preview |
-|---|---|---|
-| `-v, --version` | Display version, product name, and target platform information | `Rewind v0.1.0 — Local-first transparent file recovery system (Linux x86_64, C++20)` |
-| `-h, --help` | Display command usage synopsis, global options, and planned subcommands | Full command synopsis and option summary |
+| Flag            | Description                                                             | Output Preview                                                                       |
+| --------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| `-v, --version` | Display version, product name, and target platform information          | `Rewind v0.1.0 — Local-first transparent file recovery system (Linux x86_64, C++20)` |
+| `-h, --help`    | Display command usage synopsis, global options, and planned subcommands | Full command synopsis and option summary                                             |
 
 ### 1.2 Subcommand Matrix (Planned Implementation Steps)
 
-| Command | Subcommands / Flags | Description | Status |
-|---|---|---|---|
-| `rewind init` | `--store-path <dir>` | Initialize the Rewind repository and metadata database. | Planned (Step 4) |
-| `rewind root` | `add <path>`, `list`, `remove <id>` | Manage monitored directory roots. | Planned (Step 4) |
-| `rewind snapshot` | `create [root_id]`, `list`, `inspect <id>` | Trigger manual snapshots and inspect recovery points. | Planned (Step 4) |
-| `rewind timeline` | `[path]`, `--from <date>`, `--to <date>` | View chronological change history for paths. | Planned (Step 7) |
-| `rewind diff` | `<version_a> <version_b>` | Compare differences between file revisions. | Planned (Step 7) |
-| `rewind restore` | `<path> --snapshot <id> [--dest <path>]` | Safely restore a file or folder revision. | Planned (Step 5) |
-| `rewind verify` | `[--all] [--fix]` | Verify data store object hashes and database consistency. | Planned (Step 9) |
-| `rewind status` | `--json` | Display monitoring status, storage usage, and last scan health. | Planned (Step 7) |
-| `rewind gc` | `[--dry-run]` | Perform garbage collection on unreferenced objects. | Planned (Step 8) |
+| Command           | Subcommands / Flags                        | Description                                                     | Status           |
+| ----------------- | ------------------------------------------ | --------------------------------------------------------------- | ---------------- |
+| `rewind init`     | `--store-path <dir>`                       | Initialize the Rewind repository and metadata database.         | Planned (Step 4) |
+| `rewind root`     | `add <path>`, `list`, `remove <id>`        | Manage monitored directory roots.                               | Planned (Step 4) |
+| `rewind snapshot` | `create [root_id]`, `list`, `inspect <id>` | Trigger manual snapshots and inspect recovery points.           | Planned (Step 4) |
+| `rewind timeline` | `[path]`, `--from <date>`, `--to <date>`   | View chronological change history for paths.                    | Planned (Step 7) |
+| `rewind diff`     | `<version_a> <version_b>`                  | Compare differences between file revisions.                     | Planned (Step 7) |
+| `rewind restore`  | `<path> --snapshot <id> [--dest <path>]`   | Safely restore a file or folder revision.                       | Planned (Step 5) |
+| `rewind verify`   | `[--all] [--fix]`                          | Verify data store object hashes and database consistency.       | Planned (Step 9) |
+| `rewind status`   | `--json`                                   | Display monitoring status, storage usage, and last scan health. | Planned (Step 7) |
+| `rewind gc`       | `[--dry-run]`                              | Perform garbage collection on unreferenced objects.             | Planned (Step 8) |
 
 ---
 
@@ -38,7 +38,7 @@ All core subsystems operate under the root namespace `rewindfs` (isolated from g
 ### 2.1 Monadic Error & Return Primitives
 
 - **`rewindfs::common::ErrorCode`:** Strongly typed enumeration covering POSIX and domain error codes:
-  `Success = 0`, `InvalidArgument`, `FileNotFound`, `PathNotFound`, `AlreadyExists`, `PermissionDenied`, `DiskFull`, `DatabaseError`, `MigrationFailed`, `HashMismatch`, `CorruptedObject`, `ObjectNotFound`, `InvalidState`, `IoError`, `NotImplemented`, `InternalError`.
+  `Success = 0`, `InvalidArgument`, `FileNotFound`, `PathNotFound`, `AlreadyExists`, `PermissionDenied`, `DiskFull`, `DatabaseError`, `MigrationFailed`, `HashMismatch`, `CorruptedObject`, `ObjectNotFound`, `InvalidState`, `IOError`, `NotImplemented`, `InternalError`.
 - **`rewindfs::common::RewindError`:** Value-type representing error states with human-readable description, optional path context, and POSIX errno factory mapping (`RewindError::from_errno(err_num, context, path)`).
 - **`rewindfs::common::Result<T>`:** Zero-overhead monadic return type:
   - `is_ok()`, `is_err()`, `value()`, `error()`, `value_or(default_val)`.
