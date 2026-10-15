@@ -2,7 +2,6 @@
 
 #include "rewind/common/error.hpp"
 
-#include <concepts>
 #include <functional>
 #include <optional>
 #include <stdexcept>

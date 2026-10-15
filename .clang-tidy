@@ -13,7 +13,8 @@ Checks: >
   -cppcoreguidelines-avoid-magic-numbers,
   -cppcoreguidelines-pro-bounds-pointer-arithmetic,
   -cert-dcl50-cpp,
-  -cppcoreguidelines-owning-memory
+  -cppcoreguidelines-owning-memory,
+  -bugprone-easily-swappable-parameters
 
 WarningsAsErrors: ''
 

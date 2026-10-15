@@ -7,7 +7,7 @@
 
 namespace rewindfs::common {
 
-enum class ErrorCode : uint32_t {
+enum class ErrorCode : uint8_t {
   Success = 0,
   InvalidArgument,
   FileNotFound,
@@ -49,6 +49,7 @@ public:
   }
 
   [[nodiscard]] static RewindError success() noexcept;
+  // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
   [[nodiscard]] static RewindError from_errno(int err_num,
                                               std::string_view context_message,
                                               std::string_view path = "");
@@ -66,10 +67,10 @@ public:
 
 private:
   ErrorCode m_code{ErrorCode::Success};
-  std::string m_message{};
-  std::string m_context_path{};
+  std::string m_message;
+  std::string m_context_path;
 };
 
-std::ostream &operator<<(std::ostream &os, const RewindError &error);
+std::ostream &operator<<(std::ostream &stream, const RewindError &error);
 
 } // namespace rewindfs::common
