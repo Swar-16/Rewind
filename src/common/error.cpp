@@ -78,8 +78,7 @@ RewindError RewindError::success() noexcept {
 }
 
 // NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
-RewindError RewindError::from_errno(int err_num, 
-                                    std::string_view context_message,
+RewindError RewindError::from_errno(int err_num, std::string_view context_message,
                                     std::string_view path) {
     ErrorCode code = ErrorCode::IOError;
     switch (err_num) {

@@ -11,8 +11,7 @@
 
 namespace rewindfs::common {
 
-template <typename T>
-class [[nodiscard]] Result {
+template <typename T> class [[nodiscard]] Result {
 public:
     using value_type = T;
     using error_type = RewindError;
@@ -36,21 +35,13 @@ public:
         return Result(T(std::forward<Args>(args)...));
     }
 
-    [[nodiscard]] static Result err(RewindError error) {
-        return Result(std::move(error));
-    }
+    [[nodiscard]] static Result err(RewindError error) { return Result(std::move(error)); }
 
-    [[nodiscard]] bool is_ok() const noexcept {
-        return m_data.index() == 0;
-    }
+    [[nodiscard]] bool is_ok() const noexcept { return m_data.index() == 0; }
 
-    [[nodiscard]] bool is_err() const noexcept {
-        return m_data.index() == 1;
-    }
+    [[nodiscard]] bool is_err() const noexcept { return m_data.index() == 1; }
 
-    explicit operator bool() const noexcept {
-        return is_ok();
-    }
+    explicit operator bool() const noexcept { return is_ok(); }
 
     [[nodiscard]] const T& value() const& {
         if (is_err()) {
@@ -87,16 +78,14 @@ public:
         return std::get<1>(std::move(m_data));
     }
 
-    template <typename U>
-    [[nodiscard]] T value_or(U&& default_value) const& {
+    template <typename U> [[nodiscard]] T value_or(U&& default_value) const& {
         if (is_ok()) {
             return std::get<0>(m_data);
         }
         return static_cast<T>(std::forward<U>(default_value));
     }
 
-    template <typename Func>
-    auto and_then(Func&& func) const& {
+    template <typename Func> auto and_then(Func&& func) const& {
         using ReturnType = std::invoke_result_t<Func, const T&>;
         if (is_err()) {
             return ReturnType::err(error());
@@ -104,8 +93,7 @@ public:
         return std::invoke(std::forward<Func>(func), value());
     }
 
-    template <typename Func>
-    auto and_then(Func&& func) && {
+    template <typename Func> auto and_then(Func&& func) && {
         using ReturnType = std::invoke_result_t<Func, T&&>;
         if (is_err()) {
             return ReturnType::err(std::move(*this).error());
@@ -113,8 +101,7 @@ public:
         return std::invoke(std::forward<Func>(func), std::move(*this).value());
     }
 
-    template <typename Func>
-    auto transform(Func&& func) const& {
+    template <typename Func> auto transform(Func&& func) const& {
         using TransformedType = std::invoke_result_t<Func, const T&>;
         if (is_err()) {
             return Result<TransformedType>::err(error());
@@ -122,8 +109,7 @@ public:
         return Result<TransformedType>::ok(std::invoke(std::forward<Func>(func), value()));
     }
 
-    template <typename Func>
-    auto transform(Func&& func) && {
+    template <typename Func> auto transform(Func&& func) && {
         using TransformedType = std::invoke_result_t<Func, T&&>;
         if (is_err()) {
             return Result<TransformedType>::err(std::move(*this).error());
@@ -136,8 +122,7 @@ private:
     std::variant<T, RewindError> m_data;
 };
 
-template <>
-class [[nodiscard]] Result<void> {
+template <> class [[nodiscard]] Result<void> {
 public:
     using value_type = void;
     using error_type = RewindError;
@@ -151,25 +136,15 @@ public:
     Result& operator=(Result&&) noexcept = default;
     ~Result() = default;
 
-    [[nodiscard]] static Result ok() noexcept {
-        return Result();
-    }
+    [[nodiscard]] static Result ok() noexcept { return Result(); }
 
-    [[nodiscard]] static Result err(RewindError error) {
-        return Result(std::move(error));
-    }
+    [[nodiscard]] static Result err(RewindError error) { return Result(std::move(error)); }
 
-    [[nodiscard]] bool is_ok() const noexcept {
-        return !m_error.has_value();
-    }
+    [[nodiscard]] bool is_ok() const noexcept { return !m_error.has_value(); }
 
-    [[nodiscard]] bool is_err() const noexcept {
-        return m_error.has_value();
-    }
+    [[nodiscard]] bool is_err() const noexcept { return m_error.has_value(); }
 
-    explicit operator bool() const noexcept {
-        return is_ok();
-    }
+    explicit operator bool() const noexcept { return is_ok(); }
 
     void value() const {
         if (is_err()) {
@@ -191,8 +166,7 @@ public:
         return std::move(*m_error);
     }
 
-    template <typename Func>
-    auto and_then(Func&& func) const& {
+    template <typename Func> auto and_then(Func&& func) const& {
         using ReturnType = std::invoke_result_t<Func>;
         if (is_err()) {
             return ReturnType::err(error());
