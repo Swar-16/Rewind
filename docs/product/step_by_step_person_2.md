@@ -24,7 +24,7 @@ You are **Person 2**, responsible for SQLite persistence, relational schemas, da
 
 ## 2. Step-by-Step Work Breakdown
 
-### Step 1: Common Infrastructure, Error Model & Baseline CLI
+### Step 1: Common Infrastructure, Error Model & Baseline CLI [✅ Complete]
 - **Branch:** `feat/step-01-person2`
 - **Assigned Files:**
   - `include/rewind/common/error.hpp`
