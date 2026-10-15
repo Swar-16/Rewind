@@ -49,24 +49,24 @@ graph TD
 
 ## 2. Master Step Matrix
 
-| Step | Milestone Name | Person 1 Focus (Systems & Storage) | Person 2 Focus (Metadata & Applications) | Integration Deliverable |
-|---|---|---|---|---|
-| **Step 1** | Build Foundation & Toolchains | CMake root, compiler warnings, sanitizers, CI workflow | Common types (`Result`, `Error`), version constants, baseline CLI skeleton | Clean build, GCC 13+ & Clang 17+ CI passing |
-| **Step 2** | Core Storage & Database Setup | BLAKE3 cryptographic hasher, temporary write & atomic publish | SQLite connection wrapper, WAL mode, migration engine | Durable object store + migrating SQLite DB |
-| **Step 3** | Snapshot Coordinator & Metadata Repositories | Commit protocol state machine & object durability flush | SQLite repository tables (`protected_root`, `snapshot`, `file_entry`) | End-to-end two-phase snapshot commit |
-| **Step 4** | Filesystem Scanner & Manual Snapshots | Path sanitizer, traversal policy, directory scanner | Root configuration CLI (`root add/list`), snapshot CLI (`snapshot create`) | Manual directory snapshot via CLI |
-| **Step 5** | Verified Restore Safety & Safety Copies | Pre-restore hash verification, staging temporary file, atomic replacer | Restore planner, conflict detector, safety copy manager, SQLite audit | Zero-data-loss verified file restore |
-| **Step 6** | Observer, Coalescing & Reconciliation | Linux `inotify` watcher, bounded queue, quiet-period debouncer | Periodic reconciliation scanner, history confidence evaluator | Background automatic change capture |
-| **Step 7** | Timeline Queries, Diffing & Interactive CLI | Bounded file diff generator (unified diffs for text files) | SQLite timeline query engine, CLI `timeline`, `diff`, `status` subcommands | Complete interactive CLI history browser |
-| **Step 8** | Retention Policy & Safe Garbage Collection | Reachability-based object garbage collector, dry-run pruning | Age/count retention evaluator, SQLite snapshot pruning | Bounded storage growth with crash safety |
-| **Step 9** | Security Hardening & Benchmarks | Path traversal security test suites, symlink jail tests | Crash-injection test harness, performance & memory benchmark suites | Security pass, ASan/UBSan/TSan verified |
-| **Step 10** | Systemd Service, Packaging & Documentation | Packaging specs (CPack deb/rpm), systemd user unit | Final wiki doc sync, sample configurations, end-to-end release smoke test | Production-ready distributable packages |
+| Step | Milestone Name | Status | Person 1 Focus (Systems & Storage) | Person 2 Focus (Metadata & Applications) | Integration Deliverable |
+|---|---|---|---|---|---|
+| **Step 1** | Build Foundation & Toolchains | 🟢 Completed | CMake root, compiler warnings, sanitizers, CI workflow | Common types (`Result`, `Error`), version constants, baseline CLI skeleton | Clean build, GCC 13+ & Clang 17+ CI passing |
+| **Step 2** | Core Storage & Database Setup | ❌ Not Started | BLAKE3 cryptographic hasher, temporary write & atomic publish | SQLite connection wrapper, WAL mode, migration engine | Durable object store + migrating SQLite DB |
+| **Step 3** | Snapshot Coordinator & Metadata Repositories | ❌ Not Started | Commit protocol state machine & object durability flush | SQLite repository tables (`protected_root`, `snapshot`, `file_entry`) | End-to-end two-phase snapshot commit |
+| **Step 4** | Filesystem Scanner & Manual Snapshots | ❌ Not Started | Path sanitizer, traversal policy, directory scanner | Root configuration CLI (`root add/list`), snapshot CLI (`snapshot create`) | Manual directory snapshot via CLI |
+| **Step 5** | Verified Restore Safety & Safety Copies | ❌ Not Started | Pre-restore hash verification, staging temporary file, atomic replacer | Restore planner, conflict detector, safety copy manager, SQLite audit | Zero-data-loss verified file restore |
+| **Step 6** | Observer, Coalescing & Reconciliation | ❌ Not Started | Linux `inotify` watcher, bounded queue, quiet-period debouncer | Periodic reconciliation scanner, history confidence evaluator | Background automatic change capture |
+| **Step 7** | Timeline Queries, Diffing & Interactive CLI | ❌ Not Started | Bounded file diff generator (unified diffs for text files) | SQLite timeline query engine, CLI `timeline`, `diff`, `status` subcommands | Complete interactive CLI history browser |
+| **Step 8** | Retention Policy & Safe Garbage Collection | ❌ Not Started | Reachability-based object garbage collector, dry-run pruning | Age/count retention evaluator, SQLite snapshot pruning | Bounded storage growth with crash safety |
+| **Step 9** | Security Hardening & Benchmarks | ❌ Not Started | Path traversal security test suites, symlink jail tests | Crash-injection test harness, performance & memory benchmark suites | Security pass, ASan/UBSan/TSan verified |
+| **Step 10** | Systemd Service, Packaging & Documentation | ❌ Not Started | Packaging specs (CPack deb/rpm), systemd user unit | Final wiki doc sync, sample configurations, end-to-end release smoke test | Production-ready distributable packages |
 
 ---
 
 ## 3. Step-by-Step Implementation Details
 
-### Step 1: Build Foundation, Toolchains & Common Infrastructure
+### Step 1: Build Foundation, Toolchains & Common Infrastructure [✅ Complete]
 - **Objective:** Establish the CMake project, compiler warning baselines, sanitizer presets, CI pipelines, and shared core primitives.
 - **Person 1 Responsibilities:**
   - Create root `CMakeLists.txt`, `cmake/CompilerWarnings.cmake`, `cmake/Sanitizers.cmake`, `cmake/Dependencies.cmake`.
@@ -79,9 +79,10 @@ graph TD
   - Create `include/rewind/common/version.hpp` and minimal `src/main.cpp` with `--version` and `--help` CLI parsing.
   - Create `tests/unit/test_common.cpp` verifying `Result` and error handling.
 - **Merge & Verification Gate:**
-  - Both PRs merged into `dev`.
-  - Command: `cmake --preset debug && cmake --build --preset debug && ctest --preset debug`.
-  - Verification: Clean compilation with `-Wall -Wextra -Wpedantic -Werror`, test binary exits with 0.
+  - Status: ✅ Complete across `debug`, `asan`, `tsan`, and `release` presets in WSL2 (Ubuntu 24.04).
+  - Person 1 Report: [Implementations/step_01_build_foundation.md](../../Implementations/step_01_build_foundation.md)
+  - Person 2 Report: [Implementations/step_01_common_infrastructure.md](../../Implementations/step_01_common_infrastructure.md)
+  - Verification: Clean compilation with `-Wall -Wextra -Wpedantic -Werror`, 16/16 tests passing.
 
 ---
 

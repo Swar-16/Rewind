@@ -1,12 +1,15 @@
 # System Architecture
 
-> **Status:** Outline / Planned  
+> **Status:** Active Baseline (Step 1 Foundation & Common Subsystem Operational)  
 > **Target:** Linux Desktop, C++20  
 > **Source Directory:** `src/`, `include/rewind/`
 
 ## 1. Overview and Design Philosophy
 
-Rewind is structured as a modular monolith in C++20. High-level responsibilities are decoupled across distinct subsystems to enforce clear ownership, explicit lifetimes, and testability.
+Rewind is structured as a modular monolith in C++20. High-level responsibilities are decoupled across distinct subsystems to enforce clear ownership, explicit lifetimes, zero raw owning pointers, and high testability.
+
+### Root Namespace Convention (`rewindfs`)
+To eliminate redeclaration collisions with the glibc POSIX C function `extern void rewind(FILE *stream);` declared at the global scope in `<stdio.h>`, all core C++ entities are declared under the root namespace `rewindfs` (e.g., `rewindfs::common`, `rewindfs::storage`, `rewindfs::metadata`).
 
 ## 2. High-Level Data Flow
 
@@ -26,6 +29,7 @@ Periodic reconciliation scan ────────────────┘
 
 ## 3. Subsystem Breakdown
 
+- **`common`:** Shared types across all subsystems: `rewindfs::common::RewindError`, domain `ErrorCode`, monadic `Result<T>` and `Result<void>`, and semantic versioning primitives. (Implemented in Step 1)
 - **`observer`:** Linux filesystem notification backend (`inotify`), event translation, queue management, and quiet-period coalescing.
 - **`filesystem`:** Safe directory traversal, permission handling, file identity detection, and symlink policy enforcement.
 - **`snapshot`:** Orchestrates scans, content hashing, manifest generation, and coordinates transactional commits.
@@ -44,4 +48,4 @@ Periodic reconciliation scan ────────────────┘
 - Transactional commit boundary ordering (writing immutable objects before committing SQLite snapshot manifest).
 
 ---
-*Detailed component specifications and interface contracts will be documented during implementation phases.*
+*Detailed component specifications and interface contracts will be documented as each subsystem is developed.*
