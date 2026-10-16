@@ -24,8 +24,9 @@ You are **Person 1**, responsible for the core systems, low-level OS primitives,
 
 ## 2. Step-by-Step Work Breakdown
 
-### Step 1: Build Foundation, Toolchains & CI Infrastructure
-- **Branch:** `feat/step-01-person1`
+### Step 1: Build Foundation, Toolchains & CI Infrastructure [✅ Complete]
+- **Branch:** `feat/step-01-person1` (Merged into `main` via PR #1)
+- **Status:** ✅ Complete (Commit `7123462`)
 - **Assigned Files:**
   - `CMakeLists.txt` (Root configuration)
   - `CMakePresets.json` (Debug, Release, ASan, TSan presets)
@@ -48,7 +49,8 @@ You are **Person 1**, responsible for the core systems, low-level OS primitives,
   cmake --build --preset debug
   ctest --preset debug --output-on-failure
   ```
-- **Sync with Person 2:** Wait for Person 2's `common/` types PR, merge to `dev`, test joint build.
+- **Sync with Person 2:** ✅ Integrated with Person 2's `common/` types (`feat/step-01-person2`); joint build and test suite passed across all presets.
+- **Implementation Report:** [Implementations/step_01_build_foundation.md](../../Implementations/step_01_build_foundation.md)
 
 ---
 

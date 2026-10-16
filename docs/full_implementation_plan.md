@@ -463,13 +463,15 @@ rewind/
 - **Why:** Ensure that architectural decisions (such as whole-file vs. chunked objects, debouncing windows, and metadata fields) match realistic usage patterns.
 - **How:** Create representative file datasets (source code repositories, text drafts, structured project folders) to drive automated benchmarks and test suites.
 
-### Phase 1: Build Foundation, Toolchains & CI
+### Phase 1: Build Foundation, Toolchains & CI [✅ Complete]
 - **What:** Configure root CMake structure, compiler warnings, static analyzers, sanitizer presets, and GitHub Actions CI.
 - **Why:** Establish zero-warning baseline, reproducible developer builds, and automated regression testing before implementing core domain code.
 - **How:**
   - Create `CMakeLists.txt`, `CMakePresets.json`, `cmake/CompilerWarnings.cmake`, `cmake/Sanitizers.cmake`.
   - Implement common primitives: `Result<T, Error>`, `RewindError`, version constants, and minimal CLI with `--version` and `--help`.
   - Add GitHub Actions CI workflow building on Ubuntu with GCC and Clang.
+- **Status:** ✅ Complete. Verified on Linux WSL2 across `debug`, `asan`, `tsan`, and `release` presets (16/16 tests passing).
+- **Implementation Reports:** [step_01_build_foundation.md](../Implementations/step_01_build_foundation.md) (Person 1) and [step_01_common_infrastructure.md](../Implementations/step_01_common_infrastructure.md) (Person 2).
 
 ### Phase 2: Content-Addressed Immutable Object Store
 - **What:** Build the storage engine that writes, hashes, stores, and verifies immutable content objects.

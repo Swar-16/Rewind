@@ -360,7 +360,9 @@ For each substantial task:
 
 **Report & Archive:** Explain what changed, why it changed, what was actually tested, known limitations, and next steps. Archive the completed `Implementation Plan` in `Implementations/` (Section 24.3).
 
-**Synchronize Documentation:** Update all affected tracking documents (`full_implementation_plan.md`, `progress_tracker.md`, `step_by_step_guide.md`, `README.md`, and relevant `.md` files under `docs/`) immediately upon completing the task (Section 24.4), strictly adhering to emoji constraints (Section 24.5).
+**Synchronize Documentation:** Update all affected tracking documents (`full_implementation_plan.md`, `progress_tracker.md`, `step_by_step_guide.md`, `README.md`, `wiki/`, and all relevant `.md` files under `docs/`) immediately upon completing each implementation step so that documentation is always 100% up-to-date before raising the PR and merging it (Section 24.4), strictly adhering to emoji constraints (Section 24.5).
+
+**Git Commit and Push Boundary:** Never execute `git commit`, `git push`, `git pull`, `git merge`, or create git tags. Committing code and managing remote branches is strictly reserved for the human programmers only. Only read-only operations that do not push or pull (`git status`, `git diff`, `git log`) are allowed (Section 24.7).
 
 If repository access or command execution is unavailable, say so. Provide exact verification commands without pretending they were executed.
 
@@ -419,6 +421,8 @@ Keep simple answers concise. Do not bury code under generic theory or force this
 - Leave the codebase in a buildable and testable state after each coherent change.
 - Keep the repository strictly organized according to PRD domain boundaries; never create empty or ad-hoc folders.
 - Archive completed implementation plans in `Implementations/` and keep all project tracking documentation synchronized.
+- Update all documentation and markdown files immediately after each step is implemented so that docs remain 100% up-to-date when raising the PR and merging it.
+- Under no circumstances make git commits, pushes, or pulls. All git commits and remote operations must be done by the programmers only; only non-mutating operations like `git status` and `git diff` are permitted.
 - Strictly adhere to emoji restrictions across all Markdown documentation (status indicators only where needed).
 
 ## 24. Implementation Planning, Archiving, and Documentation Standards
@@ -473,14 +477,15 @@ Every implementation plan must be comprehensive, rigorous, and actionable. When 
 
 ### 24.4 Post-Implementation Documentation Synchronization Lifecycle
 
-Immediately upon completing any implementation task, update all affected documentation to guarantee 100% consistency with the codebase:
+Immediately upon completing any implementation step, you must update all documentation and markdown files across the repository to ensure 100% consistency with the current state of the codebase. This synchronization must be completed before raising the Pull Request and merging it:
 
 1. **`full_implementation_plan.md`:** Update the active roadmap, mark finished milestones as completed, and outline immediate next tasks.
 2. **`progress_tracker.md`:** Update phase statuses, verification checklists, test results, and milestone delivery dates.
-3. **`step_by_step_guide.md`:** Update developer workflows, setup instructions, build steps, and CLI usage guides.
+3. **`step_by_step_guide.md` & Developer Workflow Guides:** Update developer workflows, setup instructions, build steps, CLI usage guides, and individual guides (`docs/product/step_by_step_person_1.md`, `docs/product/step_by_step_person_2.md`).
 4. **`README.md`:** Synchronize high-level features, build status, current capabilities, and usage examples.
-5. **Domain Markdown Files under `docs/`:** Synchronize the relevant technical docs (`docs/architecture/`, `docs/security/`, `docs/testing/`, `docs/ux/`, `docs/product/`, etc.) whenever architecture, protocols, invariants, schemas, or threat models change.
+5. **Domain Markdown Files under `docs/`:** Synchronize all relevant technical docs (`docs/architecture/`, `docs/security/`, `docs/testing/`, `docs/ux/`, `docs/product/`, etc.) whenever architecture, protocols, invariants, schemas, or threat models change.
 6. **New Documentation:** Create additional focused documentation files under `docs/` when new subsystems, protocols, or benchmarks are introduced.
+7. **Pre-PR / Pre-Merge Requirement:** A step is not considered complete until all documentation updates are written, reviewed, and aligned with the code. The PR must contain both the implementation and its corresponding updated documentation.
 
 ### 24.5 Strict Markdown Style and Emoji Constraints
 
@@ -497,3 +502,13 @@ Immediately upon completing any implementation task, update all affected documen
 - **Progressive Population:** Wiki markdown files in `wiki/` are initialized as structured outlines and must be populated with comprehensive technical depth as each respective milestone is developed.
 - **Concise README Principle:** The root `README.md` must remain concise, high-impact, and executive-level (~120–180 lines), providing a quick start and directing readers to the Wiki in `wiki/` for deep technical references.
 - **Master Blueprint Alignment:** The master plan at `docs/full_implementation_plan.md` acts as the foundational technical blueprint upon which `step_by_step_guide.md` and `progress_tracker.md` are derived.
+
+### 24.7 Git Commit and Version Control Operating Boundaries
+
+- **Strict Prohibition on Git Commits and Remote Actions:** The AI assistant is strictly prohibited from executing `git commit`, `git push`, `git pull`, `git merge`, `git rebase`, or creating git tags. Commit authoring, staging decisions, branch management, and remote synchronization must be performed exclusively by the human programmers/engineers.
+- **Permitted Read-Only Git Operations:** The assistant is authorized only to run safe, non-mutating diagnostic git commands to inspect working tree state and review diffs without pushing, pulling, or writing commits:
+  - `git status` (to verify working directory state and untracked files).
+  - `git diff` (to review staged and unstaged code modifications).
+  - `git log` (to inspect commit history).
+  - `git branch` (to verify active branch context).
+- **Pre-PR Completeness Verification:** Prior to handoff to the programmer for committing, raising a PR, and merging, the assistant must ensure that all code changes, test verifications, and corresponding documentation updates across all `.md` files are completely written and validated.
