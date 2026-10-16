@@ -175,7 +175,7 @@ public:
     }
 
 private:
-    std::optional<RewindError> m_error;
+    std::optional<RewindError> m_error{std::nullopt};
 };
 
 } // namespace rewindfs::common

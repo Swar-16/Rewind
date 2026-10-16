@@ -14,7 +14,8 @@ Checks: >
   -cppcoreguidelines-pro-bounds-pointer-arithmetic,
   -cert-dcl50-cpp,
   -cppcoreguidelines-owning-memory,
-  -bugprone-easily-swappable-parameters
+  -bugprone-easily-swappable-parameters,
+  -readability-redundant-member-init
 
 WarningsAsErrors: ''
 

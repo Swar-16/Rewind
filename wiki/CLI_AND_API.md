@@ -38,8 +38,8 @@ All core subsystems operate under the root namespace `rewindfs` (isolated from g
 ### 2.1 Monadic Error & Return Primitives
 
 - **`rewindfs::common::ErrorCode`:** Strongly typed enumeration covering POSIX and domain error codes:
-  `Success = 0`, `InvalidArgument`, `FileNotFound`, `PathNotFound`, `AlreadyExists`, `PermissionDenied`, `DiskFull`, `DatabaseError`, `MigrationFailed`, `HashMismatch`, `CorruptedObject`, `ObjectNotFound`, `InvalidState`, `IOError`, `NotImplemented`, `InternalError`.
-- **`rewindfs::common::RewindError`:** Value-type representing error states with human-readable description, optional path context, and POSIX errno factory mapping (`RewindError::from_errno(err_num, context, path)`).
+  `InvalidArgument = 1`, `FileNotFound`, `PathNotFound`, `AlreadyExists`, `PermissionDenied`, `DiskFull`, `DatabaseError`, `MigrationFailed`, `HashMismatch`, `CorruptedObject`, `ObjectNotFound`, `InvalidState`, `IOError`, `NotImplemented`, `InternalError`.
+- **`rewindfs::common::RewindError`:** Pure error value-type representing failure states with human-readable description, optional `std::filesystem::path` context, and POSIX errno factory mapping (`RewindError::from_errno(err_num, context, path)`).
 - **`rewindfs::common::Result<T>`:** Zero-overhead monadic return type:
   - `is_ok()`, `is_err()`, `value()`, `error()`, `value_or(default_val)`.
   - Monadic chaining: `and_then(Func&&)` and `transform(Func&&)`.

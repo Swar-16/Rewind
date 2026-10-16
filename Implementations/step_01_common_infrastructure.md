@@ -127,13 +127,15 @@ flowchart TD
 - **What:** Strongly typed error domain representation.
 - **Why:** Eliminates ambiguous integer error codes and raw uncaught exceptions.
 - **How:**
-  - `enum class ErrorCode : uint32_t`:
-    `Success = 0`, `InvalidArgument`, `FileNotFound`, `PathNotFound`, `AlreadyExists`, `PermissionDenied`, `DiskFull`, `DatabaseError`, `MigrationFailed`, `HashMismatch`, `CorruptedObject`, `ObjectNotFound`, `InvalidState`, `IOError`, `NotImplemented`, `InternalError`.
+  - `enum class ErrorCode : uint8_t`:
+    `InvalidArgument = 1`, `FileNotFound`, `PathNotFound`, `AlreadyExists`, `PermissionDenied`, `DiskFull`, `DatabaseError`, `MigrationFailed`, `HashMismatch`, `CorruptedObject`, `ObjectNotFound`, `InvalidState`, `IOError`, `NotImplemented`, `InternalError`.
   - `class RewindError`:
-    - Constructors: `RewindError(ErrorCode code, std::string message, std::string context_path = "")`.
-    - Factory method: `static RewindError from_errno(int err_num, std::string_view context_message, std::string_view path = "")` to safely map Linux system call failures (`EACCES`, `ENOENT`, `ENOSPC`, etc.).
+    - Pure Error model: no default success state; an instance of `RewindError` represents genuine failure.
+    - Constructors: `RewindError(ErrorCode code, std::string message, std::filesystem::path context_path = {})`.
+    - Factory method: `static RewindError from_errno(int err_num, std::string_view context_message, std::filesystem::path path = {})` to safely map Linux system call failures (`EACCES`, `ENOENT`, `ENOSPC`, etc.).
     - Accessors: `code()`, `code_name()`, `message()`, `context_path()`, `to_string()`.
-    - Stream operator: `std::ostream& operator<<(std::ostream& os, const RewindError& error)`.
+    - Equality: `bool operator==(const RewindError&) const noexcept = default;`.
+    - Stream operator: `std::ostream& operator<<(std::ostream& stream, const RewindError& error)`.
 
 ### 5.3 `include/rewind/common/result.hpp`
 - **What:** Lightweight, monadic `Result<T, RewindError>` implementation.
@@ -172,7 +174,7 @@ cmake --preset debug
 cmake --build --preset debug
 ctest --preset debug --output-on-failure
 ```
-**Result:** ✅ 16/16 tests passed (100%).
+**Result:** ✅ 15/15 tests passed (100%).
 
 ### 6.2 AddressSanitizer & UndefinedBehaviorSanitizer
 ```bash
@@ -180,7 +182,7 @@ cmake --preset asan
 cmake --build --preset asan
 ctest --preset asan --output-on-failure
 ```
-**Result:** ✅ 16/16 tests passed (100%). 0 memory leaks, 0 undefined behaviors.
+**Result:** ✅ 15/15 tests passed (100%). 0 memory leaks, 0 undefined behaviors.
 
 ### 6.3 ThreadSanitizer
 ```bash
@@ -188,7 +190,7 @@ cmake --preset tsan
 setarch x86_64 -R cmake --build --preset tsan
 setarch x86_64 -R ctest --preset tsan --output-on-failure
 ```
-**Result:** ✅ 16/16 tests passed (100%). 0 race conditions.
+**Result:** ✅ 15/15 tests passed (100%). 0 race conditions.
 
 ### 6.4 Release Preset Build & Test
 ```bash
@@ -196,7 +198,7 @@ cmake --preset release
 cmake --build --preset release
 ctest --preset release --output-on-failure
 ```
-**Result:** ✅ 16/16 tests passed (100%).
+**Result:** ✅ 15/15 tests passed (100%).
 
 ### 6.5 CLI Binary Verification
 ```bash

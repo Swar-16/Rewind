@@ -9,8 +9,6 @@ namespace rewindfs::common {
 
 std::string_view error_code_to_string(ErrorCode code) noexcept {
     switch (code) {
-    case ErrorCode::Success:
-        return "Success";
     case ErrorCode::InvalidArgument:
         return "InvalidArgument";
     case ErrorCode::FileNotFound:
@@ -45,7 +43,7 @@ std::string_view error_code_to_string(ErrorCode code) noexcept {
     return "UnknownError";
 }
 
-RewindError::RewindError(ErrorCode code, std::string message, std::string context_path)
+RewindError::RewindError(ErrorCode code, std::string message, std::filesystem::path context_path)
     : m_code(code), m_message(std::move(message)), m_context_path(std::move(context_path)) {}
 
 std::string_view RewindError::code_name() const noexcept {
@@ -53,12 +51,9 @@ std::string_view RewindError::code_name() const noexcept {
 }
 
 std::string RewindError::to_string() const {
-    if (m_code == ErrorCode::Success) {
-        return "Success";
-    }
-
     std::string result;
-    result.reserve(64 + m_message.size() + m_context_path.size());
+    const std::string path_str = m_context_path.empty() ? std::string{} : m_context_path.string();
+    result.reserve(64 + m_message.size() + path_str.size());
     result.push_back('[');
     result.append(code_name());
     result.append("] ");
@@ -66,24 +61,17 @@ std::string RewindError::to_string() const {
 
     if (!m_context_path.empty()) {
         result.append(" (path: ");
-        result.append(m_context_path);
+        result.append(path_str);
         result.push_back(')');
     }
 
     return result;
 }
 
-RewindError RewindError::success() noexcept {
-    return {ErrorCode::Success, "Operation succeeded"};
-}
-
-// NOLINTNEXTLINE(bugprone-easily-swappable-parameters)
 RewindError RewindError::from_errno(int err_num, std::string_view context_message,
-                                    std::string_view path) {
+                                    std::filesystem::path path) {
     ErrorCode code = ErrorCode::IOError;
     switch (err_num) {
-    case 0:
-        return success();
     case ENOENT:
         code = ErrorCode::FileNotFound;
         break;
@@ -105,7 +93,7 @@ RewindError RewindError::from_errno(int err_num, std::string_view context_messag
         code = ErrorCode::PathNotFound;
         break;
     default:
-        code = ErrorCode::IOError;
+        code = (err_num == 0) ? ErrorCode::InternalError : ErrorCode::IOError;
         break;
     }
 
@@ -116,24 +104,19 @@ RewindError RewindError::from_errno(int err_num, std::string_view context_messag
     }
     detailed_message.append(std::strerror(err_num));
 
-    return {code, std::move(detailed_message), std::string(path)};
+    return {code, std::move(detailed_message), std::move(path)};
 }
 
-RewindError RewindError::invalid_argument(std::string message, std::string context_path) {
+RewindError RewindError::invalid_argument(std::string message, std::filesystem::path context_path) {
     return {ErrorCode::InvalidArgument, std::move(message), std::move(context_path)};
 }
 
-RewindError RewindError::io_error(std::string message, std::string context_path) {
+RewindError RewindError::io_error(std::string message, std::filesystem::path context_path) {
     return {ErrorCode::IOError, std::move(message), std::move(context_path)};
 }
 
-RewindError RewindError::database_error(std::string message, std::string context_path) {
+RewindError RewindError::database_error(std::string message, std::filesystem::path context_path) {
     return {ErrorCode::DatabaseError, std::move(message), std::move(context_path)};
-}
-
-bool RewindError::operator==(const RewindError& other) const noexcept {
-    return m_code == other.m_code && m_message == other.m_message &&
-           m_context_path == other.m_context_path;
 }
 
 std::ostream& operator<<(std::ostream& stream, const RewindError& error) {
